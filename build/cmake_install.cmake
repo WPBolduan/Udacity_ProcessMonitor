@@ -1,4 +1,4 @@
-# Install script for directory: /home/peter/ownCloud/Documents/Programming/C_C++/Udacity/3_OOP/CppND-System-Monitor
+# Install script for directory: /home/peter/ownCloud/Documents/Programming/C_C++/Udacity/3_OOP/CppND-System-Monitor_Bolduan
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -12,7 +12,7 @@ if(NOT DEFINED CMAKE_INSTALL_CONFIG_NAME)
     string(REGEX REPLACE "^[^A-Za-z0-9_]+" ""
            CMAKE_INSTALL_CONFIG_NAME "${BUILD_TYPE}")
   else()
-    set(CMAKE_INSTALL_CONFIG_NAME "")
+    set(CMAKE_INSTALL_CONFIG_NAME "debug")
   endif()
   message(STATUS "Install configuration: \"${CMAKE_INSTALL_CONFIG_NAME}\"")
 endif()
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/peter/ownCloud/Documents/Programming/C_C++/Udacity/3_OOP/CppND-System-Monitor/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/peter/ownCloud/Documents/Programming/C_C++/Udacity/3_OOP/CppND-System-Monitor_Bolduan/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -69,8 +69,27 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+// DONE: Read and return the system memory utilization
+// Based on feedback in discussion forum I focus only on total and available memory
+float LinuxParser::MemoryUtilization() { 
+  string key, value, line;
+  float memtotal, memfree; 
+  std::ifstream stream(kProcDirectory + kMeminfoFilename);
+  if (stream.is_open()) {
+    while (std::getline(stream, line)) {
+      std::istringstream linestream(line);
+      linestream >> key;
+      if (key == "MemTotal:") {
+        linestream >> memtotal;
+      }
+      if (key == "MemAvailable:") {
+        linestream >> memfree;
+      }
+    } 
+  }     
+  return (memtotal-memfree)/memtotal;
+}
+
 
 // Read and return the system uptime
 long LinuxParser::UpTime() { 
@@ -87,24 +106,71 @@ long LinuxParser::UpTime() {
   return uptime;
 }
 
+// I see an issue here with the call of the functions
+// CpuUtilization is called twice to determine idle and active jiffies. 
+// I think it should be called once and from that call Idle and active should be determined
+
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+long LinuxParser::Jiffies() { 
+  return ActiveJiffies()+IdleJiffies(); 
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
 
 // TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
+long LinuxParser::ActiveJiffies() {
+  auto cpu_util=CpuUtilization();
+  return std::stol(cpu_util[CPUStates::kUser_]) + std::stol(cpu_util[CPUStates::kNice_]) 
+  + std::stol(cpu_util[CPUStates::kSystem_]) + std::stol(cpu_util[CPUStates::kIRQ_])
+  + std::stol(cpu_util[CPUStates::kSoftIRQ_]) + std::stol(cpu_util[CPUStates::kSteal_]);
+}
 
 // TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+long LinuxParser::IdleJiffies() { 
+  auto cpu_util=CpuUtilization();
+  return std::stol(cpu_util[CPUStates::kIdle_])+std::stol(cpu_util[CPUStates::kIOwait_]);
+}
 
-// TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+// Read and return CPU utilization
+// define the function to extract all the ten values associated with the key cpu and return a vector of string
+// reference explained here:  https://knowledge.udacity.com/questions/151964
 
-// TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+vector<string> LinuxParser::CpuUtilization() { 
+  string line,value;
+  vector<string> data;
+
+  std::ifstream stream(kProcDirectory + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream my_stream(line);
+    my_stream >> value; // read "cpu"
+    for (int  i = 0; i < 10; i++)
+          {
+            my_stream >> value ;
+            data.push_back(value);
+          }
+  }
+  return data; 
+  }
+
+// DONE: Read and return the total number of processes
+int LinuxParser::TotalProcesses() {
+  string line, key;
+  int processes;
+  std::ifstream stream(kProcDirectory + kStatFilename);
+  if (stream.is_open()) {
+    while (std::getline(stream, line)){
+      std::istringstream my_stream(line);
+      my_stream >> key;
+      if (key == "processes"){
+        my_stream >> processes;
+      }
+    }
+  }
+  return processes;
+}
 
 // TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses() { return 0; }
