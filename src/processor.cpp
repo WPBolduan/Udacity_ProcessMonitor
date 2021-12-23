@@ -28,7 +28,7 @@ float Processor::Utilization() {
     float util;
     auto prev_active = LinuxParser::ActiveJiffies();
     auto prev_total = LinuxParser::Jiffies();
-    usleep (50000);  // found this in a thread in internet
+    usleep (80000);  // found this in a thread in internet
     auto active = LinuxParser::ActiveJiffies();
     auto total = LinuxParser::Jiffies();
     auto delta_total = total - prev_total;

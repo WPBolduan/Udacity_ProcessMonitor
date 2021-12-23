@@ -27,7 +27,7 @@ int RunningProcesses();
 std::string OperatingSystem();
 std::string Kernel();
 
-// CPU   https://knowledge.udacity.com/questions/155225
+// CPU
 enum CPUStates {
   kUser_ = 0,
   kNice_,
@@ -41,6 +41,8 @@ enum CPUStates {
   kGuestNice_
 };
 std::vector<std::string> CpuUtilization();
+std::vector<std::string> Split_String(const std::string& s, char delimiter); //splitting the string for User Name
+// later I found that I could use the same solution as earlier to replace ":" by space (), but kept it
 long Jiffies();
 long ActiveJiffies();
 long ActiveJiffies(int pid);

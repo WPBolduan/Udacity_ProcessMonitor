@@ -24,13 +24,15 @@ Processor& System::Cpu() { return cpu_; }
 
 vector<Process>& System::Processes() { 
   vector<int> pids = LinuxParser::Pids();
-  processes_.clear();
+  processes_.clear(); // clear the vector/container of processes
+  // iterate through the pids and instantiate the processes
   for (long unsigned int i = 0; i < pids.size(); i++) {
     if (!LinuxParser::Ram(pids[i]).empty()) {
       Process process(pids[i]);
       processes_.push_back(process);
     }
   }  
+  // sort the processes
   std::sort(processes_.rbegin(), processes_.rend());
   return processes_;
 }
